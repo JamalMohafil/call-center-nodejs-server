@@ -727,19 +727,6 @@
     },
     {
       "parameters": {
-        "jsCode": "const item = $input.first();\n\ntry {\n  // جلب streamSid بسرعة\n  const streamSid = $('Webhook2').first().json.body?.streamSid;\n  \n  if (!streamSid) {\n    throw new Error('streamSid مطلوب ومفقود في webhook');\n  }\n\n  // جلب البيانات الصوتية مباشرة\n  const binaryKeys = Object.keys(item.binary || {});\n  if (binaryKeys.length === 0) {\n    throw new Error('لا توجد ملفات صوتية');\n  }\n\n  const audioKey = binaryKeys[0];\n     \n \n  // تحديد التنسيق بسرعة\n  let audioFormat = 'mp3';\n     const audioBuffer = await this.helpers.getBinaryDataBuffer(0, audioKey);\n      const audioData = audioBuffer.toString('base64');\n  // إرسال فوري بدون اختبارات إضافية\n  const response = await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://deaf2212e7a0.ngrok-free.app/send-audio-instant',\n    headers: { \n      'Content-Type': 'application/json'    },\n    body: {\n      streamSid,\n      audioData,\n      audioFormat,\n      \n    },\n    json: true,\n    timeout: 20000\n  });\n\n  return {\n    json: {\n      success: true,\n      streamSid: streamSid.slice(-8),\n      message: 'تم الإرسال الفوري',\n      serverResponse: response\n    }\n  };\n\n} catch (error) {\n  return {\n    json: {\n      success: false,\n      error: error.message\n    }\n  };\n}"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        192,
-        560
-      ],
-      "id": "fda45c1f-eb95-4d8d-ae98-fc2e3666f494",
-      "name": "asdasd"
-    },
-    {
-      "parameters": {
         "resource": "speech",
         "operation": "speechToText",
         "file": "audio",
@@ -793,8 +780,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -416,
-        416
+        1040,
+        -112
       ],
       "id": "75a40c95-d5be-4fa2-83d0-02a7032605bc",
       "name": "Webhook3",
@@ -807,8 +794,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -192,
-        416
+        1232,
+        -80
       ],
       "id": "ac6c788d-6f40-4198-950b-543179981f35",
       "name": "Code2"
@@ -841,8 +828,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -48,
-        416
+        1376,
+        -80
       ],
       "id": "4d626225-ea08-4234-80fe-8b53f76e40b3",
       "name": "If"
@@ -872,8 +859,8 @@
       "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
       "typeVersion": 1,
       "position": [
-        176,
-        400
+        1600,
+        -96
       ],
       "id": "146a9bdd-d988-4947-8ea1-64f3183c4991",
       "name": "Convert text to speech2",
@@ -891,8 +878,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        352,
-        432
+        1776,
+        -64
       ],
       "id": "5ccd7bc8-ea8a-4e5b-90ad-d269e790c66a",
       "name": "asdasd1"
@@ -988,6 +975,19 @@
       ],
       "id": "90baaa62-9659-4039-ad4f-909bc8db9f07",
       "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\ntry {\n  // جلب streamSid بسرعة\n  const streamSid = $('Webhook2').first().json.body?.streamSid;\n  \n  if (!streamSid) {\n    throw new Error('streamSid مطلوب ومفقود في webhook');\n  }\n\n  // جلب البيانات الصوتية مباشرة\n  const binaryKeys = Object.keys(item.binary || {});\n  if (binaryKeys.length === 0) {\n    throw new Error('لا توجد ملفات صوتية');\n  }\n\n  const audioKey = binaryKeys[0];\n     \n \n  // تحديد التنسيق بسرعة\n  let audioFormat = 'mp3';\n     const audioBuffer = await this.helpers.getBinaryDataBuffer(0, audioKey);\n      const audioData = audioBuffer.toString('base64');\n  // إرسال فوري بدون اختبارات إضافية\n  const response = await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://deaf2212e7a0.ngrok-free.app/send-audio-instant',\n    headers: { \n      'Content-Type': 'application/json'    },\n    body: {\n      streamSid,\n      audioData,\n      audioFormat,\n      \n    },\n    json: true,\n    timeout: 20000\n  });\n\n  return {\n    json: {\n      success: true,\n      streamSid: streamSid.slice(-8),\n      message: 'تم الإرسال الفوري',\n      serverResponse: response\n    }\n  };\n\n} catch (error) {\n  return {\n    json: {\n      success: false,\n      error: error.message\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        560
+      ],
+      "id": "fda45c1f-eb95-4d8d-ae98-fc2e3666f494",
+      "name": "Generate TwiML2"
     }
   ],
   "pinData": {},
@@ -1136,7 +1136,7 @@
       "main": [
         [
           {
-            "node": "asdasd",
+            "node": "Generate TwiML2",
             "type": "main",
             "index": 0
           }
@@ -1268,7 +1268,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a99c21be-687f-4a0b-8395-9465bc06200f",
+  "versionId": "d0b03b09-2d53-4274-8e92-5baed5027aa5",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e286ea6a43eb1991baddaf60965aaabeb5851bc0faedfe9c969cfad10575d55a"
