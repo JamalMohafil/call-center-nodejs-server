@@ -1,0 +1,1297 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/G1QUjBCuRBbLbAmYlTgl",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n \n  \"Accept\": \"audio/mpeg\",\n  \"Content-Type\": \"application/json\"\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"text\": \"مرحباً! أنا هنا لمساعدتك. كيف يمكنني مساعدتك اليوم؟\",  \"model_id\": \"eleven_monolingual_v1\",\n\n  \"voice_settings\": {\n    \"stability\": 0.5,\n    \"similarity_boost\": 0.75\n  }\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1168,
+        -480
+      ],
+      "id": "120938b4-c539-4db7-9dfa-818a3b90e307",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PKA91bEdYgqxzSAq",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "response.mp3",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        -960
+      ],
+      "id": "c6e83c48-6097-4afc-8d3d-9f3f9078c9e0",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.data.body }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1376,
+        -816
+      ],
+      "id": "71d044db-3142-447c-a9d2-5f3c3aeb6dc3",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "xuIPieXgUkWhoDGk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tallyform",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        544,
+        -896
+      ],
+      "id": "4b073e48-6d3d-4932-badc-d63afe32fca5",
+      "name": "Webhook",
+      "webhookId": "f02afa4d-3640-47d7-bc0f-ad5aeec2bb5b"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "com.twilio.voice.insights.call-summary.complete",
+          "com.twilio.messaging.inbound-message.received"
+        ]
+      },
+      "type": "n8n-nodes-base.twilioTrigger",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -832
+      ],
+      "id": "06d42bf4-23be-4d57-890a-d81d68b1d6a7",
+      "name": "Twilio Trigger",
+      "webhookId": "bb7d48be-0f04-43a9-81e4-5a71e3d3594b",
+      "credentials": {
+        "twilioApi": {
+          "id": "dsVFT6vXIGnUJNZg",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "operation": "speechToText",
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        992,
+        -560
+      ],
+      "id": "637ea6df-1490-4a24-9c58-28deb191839a",
+      "name": "Transcribe audio or video",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "Jk3lc0kf3kTZsaQD",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        1584,
+        -576
+      ],
+      "id": "d0333841-55d6-4e0d-b083-8acf10fd0c2f",
+      "name": "When chat message received",
+      "webhookId": "686caebf-b120-40f3-96d5-35f0992bca6b"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/G1QUjBCuRBbLbAmYlTgl",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "elevenLabsApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"text\": \"مرحباً! أنا هنا لمساعدتك. كيف يمكنني مساعدتك اليوم؟\"\n \n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        -464
+      ],
+      "id": "92fe757a-14af-452d-bf3a-c26004329dcf",
+      "name": "HTTP Request",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "Jk3lc0kf3kTZsaQD",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1136,
+        -816
+      ],
+      "id": "1aa78d98-0767-43b4-bffd-e57c0cddc1bf",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "openAiApi": {
+          "id": "xuIPieXgUkWhoDGk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "from": "+17744923323",
+        "to": "=+905055781300",
+        "toWhatsapp": true,
+        "message": "={{ $('Message a model').item.json.message.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        1936,
+        -816
+      ],
+      "id": "d428a687-aafd-4f61-94c6-b839df182989",
+      "name": "Send an SMS/MMS/WhatsApp message",
+      "credentials": {
+        "twilioApi": {
+          "id": "dsVFT6vXIGnUJNZg",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "= {{ $json.message.content }}",
+        "voice": "echo",
+        "options": {
+          "response_format": "mp3",
+          "speed": 1,
+          "binaryPropertyOutput": "data"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1648,
+        -976
+      ],
+      "id": "61011d63-a286-46f0-b349-6e19f4a4222a",
+      "name": "Generate audio",
+      "alwaysOutputData": false,
+      "credentials": {
+        "openAiApi": {
+          "id": "xuIPieXgUkWhoDGk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "incoming-voice",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1056,
+        272
+      ],
+      "id": "66a4198c-d56a-4362-9886-4c24a521337f",
+      "name": "Webhook1",
+      "webhookId": "f02afa4d-3640-47d7-bc0f-ad5aeec2bb5b"
+    },
+    {
+      "parameters": {
+        "from": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('From', ``, 'string') }}",
+        "to": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilioTool",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        -656
+      ],
+      "id": "391cb5ea-8a65-424d-837c-fc4ab70e585e",
+      "name": "Send an SMS/MMS/WhatsApp message in Twilio",
+      "notesInFlow": true,
+      "credentials": {
+        "twilioApi": {
+          "id": "dsVFT6vXIGnUJNZg",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/AC8b13d4a64bb6df6faef637524a36cb48/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "+905055781300"
+            },
+            {
+              "name": "From",
+              "value": "+17744923323"
+            },
+            {
+              "name": "Body",
+              "value": "={{ $json.message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1712,
+        -816
+      ],
+      "id": "58f548c4-0ca6-41d8-933f-8a37c7c934e7",
+      "name": "HTTP Request2",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "Jk3lc0kf3kTZsaQD",
+          "name": "ElevenLabs account"
+        },
+        "httpBasicAuth": {
+          "id": "YdkVSXs97cc5z5U6",
+          "name": "Twilio"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "com.twilio.voice.insights.call-summary.complete",
+          "com.twilio.messaging.inbound-message.received"
+        ]
+      },
+      "type": "n8n-nodes-base.twilioTrigger",
+      "typeVersion": 1,
+      "position": [
+        928,
+        -976
+      ],
+      "id": "9d788802-cebb-4af9-9e59-27652e6662a2",
+      "name": "Twilio Trigger1",
+      "webhookId": "bb7d48be-0f04-43a9-81e4-5a71e3d3594b",
+      "credentials": {
+        "twilioApi": {
+          "id": "dsVFT6vXIGnUJNZg",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// input: items from Webhook Node\nreturn items.map(item => {\n    // كل chunk يجي في body.media.payload\n    const base64Audio = item.json?.media?.payload;\n    if (!base64Audio) return null;\n\n    // تحويل Base64 إلى Buffer\n    const audioBuffer = Buffer.from(base64Audio, 'base64');\n\n    return {\n        json: {\n            // تحتفظ بالـ buffer (يمكنك لاحقًا حفظه أو إرساله للذكاء الاصطناعي)\n            audioBuffer: audioBuffer.toString('base64'), // خيار لتخزين Base64\n            timestamp: item.json?.media?.timestamp\n        }\n    };\n}).filter(x => x !== null);\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        -688
+      ],
+      "id": "ca9d9bf9-101a-4899-af02-509c1951a500",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "twilio-media-stream",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "69cb68bd-63d3-41d7-b6c2-7e88f82007e2",
+      "name": "WebSocket Media Stream",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        384,
+        -656
+      ],
+      "webhookId": "twilio-media-stream"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-audio",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -912,
+        528
+      ],
+      "id": "ffcd9af1-9a83-4611-ac13-e8d6dd7c9724",
+      "name": "Webhook2",
+      "webhookId": "f02afa4d-3640-47d7-bc0f-ad5aeec2bb5b"
+    },
+    {
+      "parameters": {
+        "jsCode": "const audioFile = $input.first().binary.audio;\nconst streamSid = $input.first().json.streamSid;\nconst timestamp = $input.first().json.timestamp;\nconst audioLength = parseInt($input.first().json.audioLength || '0');\n\nif (!audioFile) {\n  throw new Error('لم يتم العثور على ملف صوتي');\n}\n\nconsole.log(`معالجة ملف صوتي - Stream: ${streamSid}, Length: ${audioLength} chunks`);\n\nreturn [\n  {\n    json: {\n      streamSid,\n      timestamp,\n      audioLength,\n      audioFormat: $input.first().json.format || 'wav_mulaw',\n      hasAudio: !!audioFile\n    },\n    binary: {\n      audio: audioFile // إعادة الملف كـ binary\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        -128
+      ],
+      "id": "738952f6-c4a7-466d-8418-f95e36cf1e0e",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Webhook Code - Fixed Audio Play Implementation\nconst requestBody = $input.all();\n\nconsole.log('📋 Request Body:', JSON.stringify(requestBody[0]?.json || {}, null, 2));\nconst from = $input.first().json.body.Caller;\n\nconst serverHost = 'deaf2212e7a0.ngrok-free.app';\nconst streamUrl = `wss://${serverHost}/media-stream`;\n\n// رابط CloudFront مع تشفير صحيح للـ XML\nconst audioUrl = 'https://pouch.jumpshare.com/preview/KoVfd_u6Y2M8zWGL-7IQHvF5OMyqIWbmsTQbVEiD6iupADTukz8cG_oH4sm9e1IobD0RjDTgY5vjo99dVgrZWSoYJnf6ir2nE7l-p8utAzyMyIkAITG3Fj5rurjNKxLM5e4mzEreTseFqQuF5N1mjm6yjbN-I2pg_cnoHs_AmgI.mp3';\n\n \n\n// نسخة مع Play\nconst twimlResponse = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n    <Play>${audioUrl}</Play>\n    <Connect>\n        <Stream url=\"${streamUrl}\">\n            <Parameter name=\"processingMode\" value=\"immediate\" />\n            <Parameter name=\"silenceTimeout\" value=\"1000\" />\n            <Parameter name=\"expectResponse\" value=\"true\" />\n            <Parameter name=\"language\" value=\"ar\" />\n            <Parameter name=\"from\" value=\"${from}\" />\n        </Stream>\n    </Connect>\n</Response>`;\n\n// استخدم النسخة مع Play للاختبار\nconst finalResponse = twimlResponse;\n\nconsole.log('✅ TwiML Response Generated');\nconsole.log('🎵 Audio URL:', audioUrl);\n\nreturn {\n    headers: {\n        'Content-Type': 'text/xml; charset=utf-8',\n        'Cache-Control': 'no-cache',\n        'X-Twilio-Webhook-Enabled': 'true',\n        'X-Processing-Mode': 'immediate',\n        'X-Silence-Timeout': '1000ms'\n    },\n    body: finalResponse\n};"
+      },
+      "id": "acfd9039-9082-43d4-8d07-667ca645f38a",
+      "name": "Generate TwiML1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/xml"
+              }
+            ]
+          }
+        }
+      },
+      "id": "1ad9d11a-ae77-4b6a-8ebb-e7ce4a1c997b",
+      "name": "Respond TwiML1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "= {{ $json.message.content }}",
+        "voice": "echo",
+        "options": {
+          "response_format": "mp3",
+          "speed": 1,
+          "binaryPropertyOutput": "data"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2112,
+        -128
+      ],
+      "id": "be90db81-ee10-42ba-9519-def93b1acba9",
+      "name": "Generate audio1",
+      "alwaysOutputData": false,
+      "credentials": {
+        "openAiApi": {
+          "id": "xuIPieXgUkWhoDGk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.chatInput }}",
+              "role": "system"
+            },
+            {
+              "content": "الرد يجب ان يكون باللهجة الكويتية وبالعامية الصحيحة بدون مشاكل"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1776,
+        -576
+      ],
+      "id": "8b016734-890e-43c9-a72e-3dfc1c9e2329",
+      "name": "Message a model2",
+      "alwaysOutputData": false,
+      "credentials": {
+        "openAiApi": {
+          "id": "xuIPieXgUkWhoDGk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "mode": "id",
+          "value": "G1QUjBCuRBbLbAmYlTgl"
+        },
+        "text": "= {{ $json.message.content }}",
+        "additionalOptions": {
+          "model": {
+            "mode": "list",
+            "value": "eleven_multilingual_v2"
+          },
+          "outputFormat": "mp3_44100_128",
+          "languageCode": "ar",
+          "voiceSettings": "{\n  \"stability\": 1,\n  \"similarity_boost\": 1,\n  \"style\": 0,\n  \"use_speaker_boost\": true,\n  \"speed\": 1\n}"
+        },
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        2272,
+        -320
+      ],
+      "id": "51777102-fc90-428e-badd-f75f134e529d",
+      "name": "Convert text to speech",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "Jk3lc0kf3kTZsaQD",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "mode": "id",
+          "value": "G1QUjBCuRBbLbAmYlTgl"
+        },
+        "text": "={{ $json.output }}",
+        "additionalOptions": {
+          "model": {
+            "__rl": true,
+            "value": "eleven_flash_v2_5",
+            "mode": "list",
+            "cachedResultName": "Eleven Flash v2.5"
+          },
+          "outputFormat": "mp3_44100_128",
+          "languageCode": "ar",
+          "voiceSettings": "{\n  \"stability\": 1,\n  \"similarity_boost\": 1,\n  \"style\": 0,\n  \"use_speaker_boost\": true,\n  \"speed\": 1\n}"
+        },
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        576
+      ],
+      "id": "717932cb-83a0-4fe2-b920-ba47325b530d",
+      "name": "Convert text to speech1",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "Jk3lc0kf3kTZsaQD",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=أنت عيسى AI، مساعد افتراضي ذكي لعيادة \"أسنان تاور\".\nشخصيتك ودّية، سريعة بالرد، وتتكلم لهجة كويتية صرفة بدون أي كلمة فصحى.\nمطلوب منك تتعامل مع العميل وكأنك موظف استقبال حقيقي بالعيادة.\n\nأسلوب المحادثة\n\nتبلش دايم بترحيب شخصي قصير وحبّاب. مثال:\n\"هلا فيك، أنا عيسى مساعدك من أسنان تاور 🌟\"\n\nتجاوب على السؤال بسرعة وبدون لف ودوران.\n\nالرد يكون مختصر وواضح، لا تستخدم جمل طويلة.\n\nلا تعرض الحجز من نفسك إلا إذا العميل طلبه صراحة.\n\nتعليمات الحجز\n\nإذا العميل قال يبي موعد:\n\nأول شي اطلب اسمه كامل، وإذا ما عطاك اسمه قل له:\n\"عطني اسمك كامل حبيبنا عشان أثبت لك الموعد.\"\n\nعقبها خذ التاريخ اللي يبيه.\n\nاستخدم القيم:\n\nرقم العميل: {{ $('Webhook2').item.json.body.phoneNumber }}\n\nتاريخ اليوم: {{ $now }}\n\nبعدها أضف الموعد فوراً في Google Sheet.\n\nالخدمات اللي تقدمها العيادة\n\nتنظيف الأسنان، تبييض الأسنان بالليزر، علاج العصب وحشو الأسنان، زراعة الأسنان، تركيبات الأسنان الثابتة والمتحركة، تجميل الأسنان (فينير، لومينير)، علاج اللثة، تقويم الأسنان (معدني أو شفاف)، خلع الأسنان وجراحات الفم، علاج رائحة الفم، فحص شامل وكشف دوري، علاج الحساسية، حشوات تجميلية، أشعة بانوراما، واستشارات طبية عن بعد.\n\nالردود الجاهزة\n\nإذا سأل عن الخدمات: \"إي حاضر، عندنا: ...\" وتذكر له القائمة.\n\nإذا سأل عن الأسعار: \"تقدر تمر العيادة أو نرسلّك الأسعار عالواتساب.\"\n\nإذا سأل عن الموقع: \"حياك الله، موقعنا ببرج أسنان تاور – الدور الثالث.\"\n\nإذا سأل عن شي برا الأسنان: \"يا بعد قلبي، أنا أقدر أفيدك بس بخصوص الأسنان والمواعيد.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -432,
+        560
+      ],
+      "id": "867cc21c-47c6-44ba-b9e0-843bf6286b7c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook2').item.json.body.streamSid }}",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -432,
+        768
+      ],
+      "id": "b186409a-7383-4b94-be72-5447f8962bfc",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        752
+      ],
+      "id": "cde88caf-e337-43a2-b746-0fb14e621f38",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "xuIPieXgUkWhoDGk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NZPAubovxLF_DQ6nwIX2Ve8UftrZeI8e5KSI8YSX3ZU",
+          "mode": "list",
+          "cachedResultName": "Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NZPAubovxLF_DQ6nwIX2Ve8UftrZeI8e5KSI8YSX3ZU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NZPAubovxLF_DQ6nwIX2Ve8UftrZeI8e5KSI8YSX3ZU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ $fromAI(\"fullName\",\"هنا سوف تضع اسم العميل\") }}",
+            "Date": "={{ $fromAI(\"Date\",\"هنا سوف تضع الموعد الحجز\") }}",
+            "Phone Number": "+96555777706"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone Number",
+              "displayName": "Phone Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -144,
+        736
+      ],
+      "id": "fd8f4bd8-fb0e-477e-9d96-293e91c49956",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WTWzNKkyUEuKKHaU",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\ntry {\n  // جلب streamSid بسرعة\n  const streamSid = $('Webhook2').first().json.body?.streamSid;\n  \n  if (!streamSid) {\n    throw new Error('streamSid مطلوب ومفقود في webhook');\n  }\n\n  // جلب البيانات الصوتية مباشرة\n  const binaryKeys = Object.keys(item.binary || {});\n  if (binaryKeys.length === 0) {\n    throw new Error('لا توجد ملفات صوتية');\n  }\n\n  const audioKey = binaryKeys[0];\n     \n \n  // تحديد التنسيق بسرعة\n  let audioFormat = 'mp3';\n     const audioBuffer = await this.helpers.getBinaryDataBuffer(0, audioKey);\n      const audioData = audioBuffer.toString('base64');\n  // إرسال فوري بدون اختبارات إضافية\n  const response = await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://deaf2212e7a0.ngrok-free.app/send-audio-instant',\n    headers: { \n      'Content-Type': 'application/json'    },\n    body: {\n      streamSid,\n      audioData,\n      audioFormat,\n      \n    },\n    json: true,\n    timeout: 20000\n  });\n\n  return {\n    json: {\n      success: true,\n      streamSid: streamSid.slice(-8),\n      message: 'تم الإرسال الفوري',\n      serverResponse: response\n    }\n  };\n\n} catch (error) {\n  return {\n    json: {\n      success: false,\n      error: error.message\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        560
+      ],
+      "id": "fda45c1f-eb95-4d8d-ae98-fc2e3666f494",
+      "name": "asdasd"
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "operation": "speechToText",
+        "file": "audio",
+        "additionalOptions": {
+          "languageCode": "ar"
+        },
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        560
+      ],
+      "id": "a8bc99e5-549c-4e59-a54a-5dff34256406",
+      "name": "Transcribe audio or video1",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "Jk3lc0kf3kTZsaQD",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "=audio",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2352,
+        -96
+      ],
+      "id": "1b452c6d-36ad-4e75-8475-6480a429a13c",
+      "name": "Transcribe a recording1",
+      "credentials": {
+        "openAiApi": {
+          "id": "xuIPieXgUkWhoDGk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "interruption-handler",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -416,
+        416
+      ],
+      "id": "75a40c95-d5be-4fa2-83d0-02a7032605bc",
+      "name": "Webhook3",
+      "webhookId": "5990bccf-416c-4079-be6f-c7ee681d9b8b"
+    },
+    {
+      "parameters": {
+        "jsCode": "// كود معالجة إشارات المقاطعة من خادمك\nconst item = $input.first();\n\ntry {\n  const eventData = item.json.body || item.json;\n  \n  console.log('تم استقبال حدث:', eventData);\n  \n  if (eventData.event === 'user_interruption') {\n    const { streamSid, timestamp, energy } = eventData;\n    \n    console.log(`🛑 مقاطعة مستخدم للمكالمة: ${streamSid?.slice(-8)}`);\n    console.log(`⚡ مستوى الطاقة: ${energy}`);\n    \n    // إنشاء رد سريع للمقاطعة\n    const quickResponse = {\n      streamSid: streamSid,\n      event: 'interruption_acknowledged',\n      timestamp: timestamp || new Date().toISOString(),\n      energy: energy,\n      action: 'quick_acknowledgment',\n      message: 'نعم، تفضل'\n    };\n    \n    // إرسال للعقدة التالية\n    return [{\n      json: quickResponse,\n      streamSid: streamSid,\n      isInterruption: true,\n      requiresQuickResponse: true\n    }];\n  }\n  \n  // أحداث أخرى\n  return [{\n    json: eventData,\n    isInterruption: false\n  }];\n  \n} catch (error) {\n  console.error('خطأ في معالجة المقاطعة:', error.message);\n  \n  return [{\n    json: {\n      success: false,\n      error: error.message,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        416
+      ],
+      "id": "ac6c788d-6f40-4198-950b-543179981f35",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d4de668a-cb8e-4ed6-82af-e4c3fc67d365",
+              "leftValue": "={{ $json.isInterruption }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -48,
+        416
+      ],
+      "id": "4d626225-ea08-4234-80fe-8b53f76e40b3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "mode": "id",
+          "value": "G1QUjBCuRBbLbAmYlTgl"
+        },
+        "text": "=نعم، أستمع إليك تفضل",
+        "additionalOptions": {
+          "model": {
+            "__rl": true,
+            "value": "eleven_flash_v2_5",
+            "mode": "list",
+            "cachedResultName": "Eleven Flash v2.5"
+          },
+          "outputFormat": "mp3_44100_128",
+          "languageCode": "ar",
+          "voiceSettings": "{\n  \"stability\": 1,\n  \"similarity_boost\": 1,\n  \"style\": 0,\n  \"use_speaker_boost\": true,\n  \"speed\": 1\n}"
+        },
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        176,
+        400
+      ],
+      "id": "146a9bdd-d988-4947-8ea1-64f3183c4991",
+      "name": "Convert text to speech2",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "Jk3lc0kf3kTZsaQD",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\ntry {\n  // جلب streamSid بسرعة\n  const streamSid = $('Webhook2').first().json.body?.streamSid;\n  \n  if (!streamSid) {\n    throw new Error('streamSid مطلوب ومفقود في webhook');\n  }\n\n  // جلب البيانات الصوتية مباشرة\n  const binaryKeys = Object.keys(item.binary || {});\n  if (binaryKeys.length === 0) {\n    throw new Error('لا توجد ملفات صوتية');\n  }\n\n  const audioKey = binaryKeys[0];\n     \n \n  // تحديد التنسيق بسرعة\n  let audioFormat = 'mp3';\n     const audioBuffer = await this.helpers.getBinaryDataBuffer(0, audioKey);\n      const audioData = audioBuffer.toString('base64');\n  // إرسال فوري بدون اختبارات إضافية\n  const response = await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://19545a3ddd3c.ngrok-free.app/send-audio-response',\n    headers: { \n      'Content-Type': 'application/json'    },\n    body: {\n      streamSid,\n      audioData,\n      audioFormat,\n      \n    },\n    json: true,\n    timeout: 20000\n  });\n\n  return {\n    json: {\n      success: true,\n      streamSid: streamSid.slice(-8),\n      message: 'تم الإرسال الفوري',\n      serverResponse: response\n    }\n  };\n\n} catch (error) {\n  return {\n    json: {\n      success: false,\n      error: error.message\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        432
+      ],
+      "id": "5ccd7bc8-ea8a-4e5b-90ad-d269e790c66a",
+      "name": "asdasd1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -752,
+        928
+      ],
+      "id": "d64f8d81-9d3b-4a4e-b8db-796ee46754fa",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PDir2mTzkay52Hja",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "mode": "id",
+          "value": "G1QUjBCuRBbLbAmYlTgl"
+        },
+        "text": "=يلا الان قاعدة احجزلك الموعد",
+        "additionalOptions": {
+          "model": {
+            "__rl": true,
+            "value": "eleven_flash_v2_5",
+            "mode": "list",
+            "cachedResultName": "Eleven Flash v2.5"
+          },
+          "outputFormat": "mp3_44100_128",
+          "languageCode": "ar",
+          "voiceSettings": "{\n  \"stability\": 1,\n  \"similarity_boost\": 1,\n  \"style\": 0,\n  \"use_speaker_boost\": true,\n  \"speed\": 1\n}"
+        },
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        1648,
+        -272
+      ],
+      "id": "81bc393c-e65f-43ae-8efc-7558f2026e3a",
+      "name": "Convert text to speech3",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "Jk3lc0kf3kTZsaQD",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1904,
+        -256
+      ],
+      "id": "787c5c2b-4a73-41eb-a654-3536f2900f9e",
+      "name": "asdasd2"
+    },
+    {
+      "parameters": {
+        "toolDescription": "استخدم هذه الأداة قبل حجز أي موعد لتشغيل رسالة تأكيد صوتية للمستخدم.\n- هذه الأداة تشغل رسالة صوتية تقول \"تمام راح أحجزلك الموعد الآن\"\n\nمثال على الاستخدام:\nعندما يطلب المستخدم حجز موعد، استخدم هذه الأداة أولاً ثم اكمل عملية الحجز.",
+        "method": "POST",
+        "url": "=https://deaf2212e7a0.ngrok-free.app/play-pre-booking-audio-fast",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "streamSid",
+              "value": "={{ $('Webhook2').item.json.body.streamSid }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -288,
+        768
+      ],
+      "id": "90baaa62-9659-4039-ad4f-909bc8db9f07",
+      "name": "HTTP Request3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        []
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio or video": {
+      "main": [
+        []
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Message a model2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate audio": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Send an SMS/MMS/WhatsApp message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Generate TwiML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WebSocket Media Stream": {
+      "main": [
+        []
+      ]
+    },
+    "Generate TwiML1": {
+      "main": [
+        [
+          {
+            "node": "Respond TwiML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond TwiML1": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook2": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio or video1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        []
+      ]
+    },
+    "Generate audio1": {
+      "main": [
+        []
+      ]
+    },
+    "Message a model2": {
+      "main": [
+        [
+          {
+            "node": "Convert text to speech",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert text to speech1": {
+      "main": [
+        [
+          {
+            "node": "asdasd",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert text to speech1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording1": {
+      "main": [
+        []
+      ]
+    },
+    "Transcribe audio or video1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook3": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Convert text to speech2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert text to speech2": {
+      "main": [
+        [
+          {
+            "node": "asdasd1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "HTTP Request3": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a99c21be-687f-4a0b-8395-9465bc06200f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e286ea6a43eb1991baddaf60965aaabeb5851bc0faedfe9c969cfad10575d55a"
+  },
+  "id": "ew9CHxyic6kOEM4t",
+  "tags": [
+    {
+      "createdAt": "2025-08-24T11:49:58.715Z",
+      "updatedAt": "2025-08-24T11:49:58.715Z",
+      "id": "0Vp0Smiri0EgsCeS",
+      "name": "Voice AI"
+    },
+    {
+      "createdAt": "2025-08-24T11:49:58.739Z",
+      "updatedAt": "2025-08-24T11:49:58.739Z",
+      "id": "Z9n0x4JjjdvxGy36",
+      "name": "Realtime"
+    },
+    {
+      "createdAt": "2025-08-24T11:49:58.759Z",
+      "updatedAt": "2025-08-24T11:49:58.759Z",
+      "id": "xwRoz9PrdtfOABgn",
+      "name": "Twilio"
+    }
+  ]
+}
